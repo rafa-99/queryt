@@ -155,14 +155,14 @@ int* jsonDataLimits(int tokenCount, char **tokens, char *topDelimiter, char *bot
 	return limits;
 }
 
-char *curlToJSON(char *url)
+char* extractQueryJSON(char *youtubeurl)
 {
 	char *json = NULL;
 
-	if (url != NULL && strlen(url) > 0)
+	if (youtubeurl != NULL && strlen(youtubeurl) > 0)
 	{
 		// Setting Up Vars
-		char jsonVar[] = "ytInitialData", unneededHtml[] = ";</script><script", *htmlPage = downloadPage(url), **tokens = tokenizer(htmlPage, " ");
+		char jsonVar[] = "ytInitialData", unneededHtml[] = ";</script><script", *htmlPage = downloadPage(youtubeurl), **tokens = tokenizer(htmlPage, " ");
 		int numberOfTokens = tokenCount(htmlPage, " "), *limits = jsonDataLimits(numberOfTokens, tokens, jsonVar, unneededHtml);
 		json = (char *)calloc(1, sizeof(char));
 
