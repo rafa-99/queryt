@@ -88,7 +88,7 @@ Video* generateVideos(json_object* contents)
 
 	Video *videos = (Video *) calloc(videoCounter(contents), sizeof(Video));
 
-	for ( int i = 0, k = 0; i < json_object_array_length(contents); i++ )
+	for ( int i = 0, j = 0; i < json_object_array_length(contents); i++ )
 	{
 		// Initializing Vars For Each Video Structure
 		char title[TITLE + 1], author[AUTHOR + 1], id[VIDEOID + 1], duration[DURATION + 1];
@@ -115,7 +115,7 @@ Video* generateVideos(json_object* contents)
 			( json_object_get_type(dataHolder) != json_type_null ) ? strcpy(duration, json_object_get_string(dataHolder)) : strcpy(duration, "LIVE NOW") ;
 
 			// Creating Videos Data
-			videos[k++] = createVideo(title, author, id, duration);
+			videos[j++] = createVideo(title, author, id, duration);
 		}
 	}
 
