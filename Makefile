@@ -2,7 +2,7 @@
 # See LICENSE file for copyright and license details.
 
 # Source Code
-SRC = queryt.c utils.c video.c libs/curl.c libs/string.c libs/json.c
+SRC = queryt.c src/utils.c src/video.c libs/curl.c libs/string.c libs/json.c
 
 # Libraries
 LIBS = -lcurl -ljson-c

@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "utils.h"
-#include "libs/curl.h"
-#include "libs/string.h"
+#include "../libs/curl.h"
+#include "../libs/string.h"
 
 int tokenCount(char *string, char *delimiter)
 {

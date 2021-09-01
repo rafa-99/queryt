@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "video.h"
+#include "../include/video.h"
 
-Video createVideo(char *title, char *author, char *id, char *description, time_t duration)
+Video createVideo(char *title, char *author, char *id, char *duration)
 {
 	Video video;
 
@@ -25,17 +25,15 @@ Video createVideo(char *title, char *author, char *id, char *description, time_t
 		strcpy(video.id, id);
 	}
 
-	if (description != NULL && strlen(description) > 0)
+	if (duration != NULL && strlen(duration) > 0)
 	{
-		video.description = (char *) calloc(DESCRIPTION + 1, sizeof(char));
-		strcpy(video.description, description);
+		video.duration = (char *) calloc(DURATION + 1, sizeof(char));
+		strcpy(video.duration, duration);
 	}
 	else
 	{
-		video.description = (char *) calloc(1, sizeof(char));
+		video.duration = (char *) calloc(1, sizeof(char));
 	}
-
-	video.duration = duration;
 
 	return video;
 }
@@ -45,5 +43,5 @@ void freeVideo(Video *v)
 	free(v->title);
 	free(v->author);
 	free(v->id);
-	free(v->description);
+	free(v->duration);
 }
