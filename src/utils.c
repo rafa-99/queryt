@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include "utils.h"
 #include "../libs/curl.h"
 #include "../libs/string.h"
@@ -136,61 +137,38 @@ char *queryNormalizer(char *query)
 	return norm;
 }
 
-int* jsonDataLimits(int tokenCount, char **tokens, char *topDelimiter, char *bottomDelimiter)
-{
-	int *limits = (int *) calloc(2, sizeof(int));
-
-	for (int i = 0; i < tokenCount + 1 && (limits[0] == 0 || limits[1] == 0); i++)
-	{
-		if (tokens[i] != NULL && strcmp(tokens[i], topDelimiter) == 0 && strcmp(tokens[i + 1], "=") == 0)
-		{
-			limits[0] = i + 2;
-		}
-		else if (tokens[i] != NULL && limits[1] == 0 && limits[0] > 0 && strstr(tokens[i], bottomDelimiter) != NULL)
-		{
-			limits[1] = i;
-		}
-	}
-
-	return limits;
-}
-
 char* extractQueryJSON(char *youtubeurl)
 {
 	char *json = NULL;
 
 	if (youtubeurl != NULL && strlen(youtubeurl) > 0)
 	{
-		// Setting Up Vars
-		char jsonVar[] = "ytInitialData", unneededHtml[] = ";</script><script", *htmlPage = downloadPage(youtubeurl), **tokens = tokenizer(htmlPage, " ");
-		int numberOfTokens = tokenCount(htmlPage, " "), *limits = jsonDataLimits(numberOfTokens, tokens, jsonVar, unneededHtml);
-		json = (char *)calloc(1, sizeof(char));
-
-		// Pre Clearing Unused Memory
-		free(htmlPage);
-
-		// Creating the JSON String
-		for (int i = limits[0]; i <= limits[1]; i++)
+		char *htmlPage = downloadPage(youtubeurl);
+		if ( htmlPage != NULL && strlen(htmlPage) > 0 )
 		{
-			if (i < limits[1])
+			// Setting Up Vars
+			char jsonVar[] = "ytInitialData", needlessHTML[] = ";</script><script", **tokens = tokenizer(htmlPage, " ");
+			int numberOfTokens = tokenCount(htmlPage, " ");
+			json = (char *)calloc(1, sizeof(char));
+
+			// Extracting JSON String
+			for (int i = 0, j = 1; i < numberOfTokens && strstr(tokens[j-1], needlessHTML) == NULL; i++)
 			{
-				json = realloc(json, (strlen(json) + strlen(tokens[i]) + 2));
-				strcat(json, tokens[i]);
-				strcat(json, " ");
+				if ( strcmp(tokens[i], jsonVar) == 0 )
+				{
+					for ( j = i + 2; strstr(tokens[j-1], needlessHTML) == NULL; j++ )
+					{
+						json = realloc(json, (strlen(json) + strlen(tokens[j]) + 2));
+						strcat(json, tokens[j]);
+						strcat(json, " ");
+					}
+				}
 			}
-			else
-			{
-				// Last byte doesn't need a extra space
-				json = realloc(json, (strlen(json) + strlen(tokens[i]) + 1));
-				strcat(json, tokens[i]);
-			}
+
+			json[strlen(json) - strlen(needlessHTML)] = '\0';
+			freeTokens(tokens, numberOfTokens);
 		}
-
-		json[strlen(json) - strlen(unneededHtml)] = '\0';
-
-		freeTokens(tokens, numberOfTokens);
-		free(limits);
+		free(htmlPage);
 	}
-
 	return json;
 }
