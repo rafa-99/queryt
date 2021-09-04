@@ -7,7 +7,9 @@
 #include "include/video.h"
 #include "libs/json.h"
 
-void processOptions(int *options, char **args);
+#define VERSION "1.0"
+
+void processOptions(int *options, char **args, int argc);
 
 int main(int argc, char **argv)
 {
@@ -54,7 +56,7 @@ int main(int argc, char **argv)
 		}
 	}
 
-	processOptions(opts, args);
+	processOptions(opts, args, argc);
 
 	for ( int i = 0; i < 3; i++ )
 	{
@@ -65,7 +67,7 @@ int main(int argc, char **argv)
 	return 0;
 }
 
-void processOptions(int *options, char **args)
+void processOptions(int *options, char **args, int argc)
 {
 	if ( !options[1] && options[3] && !options[4] )
 	{
@@ -123,15 +125,29 @@ void processOptions(int *options, char **args)
 	}
 	else
 	{
-		if ( options[1] || (options[3] && options[4]))
+		if ( options[1] || (options[3] && options[4]) || argc == 1)
 		{
-			puts("Help Message");
+			printf("Usage: queryt -s [SEARCH]... [OPTIONS]...\n"
+					"Make youtube querys without authentication or API Key\n\n"
+					"  -f, --format		format the output query with with custom modifiers\n"
+					"		a 	author;\n"
+					"		d	duration;\n"
+					"		i	video id;\n"
+					"		t	title;\n"
+					"		R	return;\n"
+					"		T	tab;\n"
+					"  -h, --help		display this help and exit\n"
+					"  -m, --max		defines the max number of displayed results\n"
+					"  -s, --search		search content on youtube\n"
+					"  -v, --version		output version information and exit\n\n"
+					"Examples:\n"
+					"  queryt -s \"Never Gonna Give You Up\" -m 5 -f iTaTdRt\n\n");
 		}
 		else
 		{
 			if ( options[4] )
 			{
-				puts("Version Message");
+				printf("queryt-%s\n", VERSION);
 			}
 			else
 			{

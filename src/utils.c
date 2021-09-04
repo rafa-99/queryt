@@ -216,6 +216,12 @@ void printVideoInfo(char *format, Video *videos, int numberOfVideos)
 					case 't':
 						printf("%s", videos[i].title);
 						break;
+					case 'R':
+						printf("\n");
+						break;
+					case 'T':
+						printf("\t");
+						break;
 					default:
 						if( !isalpha(format[j]) )
 						{
@@ -230,7 +236,7 @@ void printVideoInfo(char *format, Video *videos, int numberOfVideos)
 	{
 		for( int i = 0; i < numberOfVideos; i++ )
 		{
-			printf("%s - %s %s %s\n", videos[i].title, videos[i].author, videos[i].duration, videos[i].id);
+			printf("%s\t%s\n", videos[i].id, videos[i].title);
 		}
 	}
 }
