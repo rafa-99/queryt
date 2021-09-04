@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include "utils.h"
 #include "../libs/curl.h"
 #include "../libs/string.h"
+#include "../include/video.h"
 
 int tokenCount(char *string, char *delimiter)
 {
@@ -170,4 +172,65 @@ char* extractQueryJSON(char *youtubeurl)
 		free(htmlPage);
 	}
 	return json;
+}
+
+int checkNumber(char *num)
+{
+	int number = 0, charCheck = 1;
+
+	if( num != NULL && strlen(num) > 0 && strlen(num) < 3 )
+	{
+		for( int i = 0; i < strlen(num) && charCheck; i++ )
+		{
+			if( !isdigit(num[i]) )
+			{
+				charCheck--;
+			}
+		}
+
+		number = ( charCheck ) ? atoi(num) : 0;
+	}
+
+	return number;
+}
+
+void printVideoInfo(char *format, Video *videos, int numberOfVideos)
+{
+	if ( format != NULL && strlen(format) > 0 )
+	{
+		for ( int i = 0; i < numberOfVideos; i++ )
+		{
+			for ( int j = 0; j < strlen(format); j++ )
+			{
+				switch(format[j])
+				{
+					case 'a':
+						printf("%s", videos[i].author);
+						break;
+					case 'd':
+						printf("%s", videos[i].duration);
+						break;
+					case 'i':
+						printf("%s", videos[i].id);
+						break;
+					case 't':
+						printf("%s", videos[i].title);
+						break;
+					default:
+						if( !isalpha(format[j]) )
+						{
+							printf("%c", format[j]);
+						}
+				}
+			}
+			printf("\n");
+		}
+	}
+	else
+	{
+		for( int i = 0; i < numberOfVideos; i++ )
+		{
+			printf("%s - %s %s %s\n", videos[i].title, videos[i].author, videos[i].duration, videos[i].id);
+		}
+	}
 }

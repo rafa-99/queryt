@@ -9,31 +9,28 @@ Video createVideo(char *title, char *author, char *id, char *duration)
 
 	if (title != NULL && strlen(title) > 0)
 	{
-		video.title = (char *) calloc(TITLE + 1, sizeof(char));
+		video.title = (char *) calloc(strlen(title) + 1, sizeof(char));
 		strcpy(video.title, title);
 	}
 
 	if (author != NULL && strlen(author) > 0)
 	{
-		video.author = (char *) calloc(AUTHOR + 1, sizeof(char));
+		video.author = (char *) calloc(strlen(author) + 1, sizeof(char));
 		strcpy(video.author, author);
 	}
 
 	if (id != NULL && strlen(id) > 0)
 	{
-		video.id = (char *) calloc(VIDEOID + 1, sizeof(char));
+		video.id = (char *) calloc(strlen(id) + 1, sizeof(char));
 		strcpy(video.id, id);
 	}
 
 	if (duration != NULL && strlen(duration) > 0)
 	{
-		video.duration = (char *) calloc(DURATION + 1, sizeof(char));
+		video.duration = (char *) calloc(strlen(duration) + 1, sizeof(char));
 		strcpy(video.duration, duration);
 	}
-	else
-	{
-		video.duration = (char *) calloc(1, sizeof(char));
-	}
+
 
 	return video;
 }

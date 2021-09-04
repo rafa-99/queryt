@@ -5,7 +5,7 @@
 #include <json-c/json.h>
 #include "include/utils.h"
 #include "include/video.h"
-#include "libs/curl.h"
+#include "libs/json.h"
 
 void processOptions(int *options, char **args);
 
@@ -82,14 +82,36 @@ void processOptions(int *options, char **args)
 
 			if ( json != NULL && strlen(json) > 0 )
 			{
-				json_object *queryRoot = json_tokener_parse(json), *handler;
+				json_object *queryRoot = jsonParseString(json);
 				free(json);
 				if ( queryRoot != NULL && json_object_get_type(queryRoot) != json_type_null )
 				{
+					json_object *handler = navigateToVideos(queryRoot);
+					int videoCount = videoCounter(handler);
+
+					if ( videoCount > 0 )
+					{
+						Video *videos = generateVideos(handler);
+						json_object_put(queryRoot);
+						int printedVideos = ( options[2] && checkNumber(args[1]) > 0) ? checkNumber(args[1]) : videoCount;
+						char *format = ( options[0] ) ? args[0] : "";
+						printVideoInfo(format, videos, printedVideos);
+
+						for ( int i = 0; i < videoCount; i++ )
+						{
+							freeVideo(&videos[i]);
+						}
+
+						free(videos);
+					}
+					else
+					{
+						json_object_put(queryRoot);
+					}
 				}
 				else
 				{
-					json_object_put(queryRoot);
+				      json_object_put(queryRoot);
 				}
 			}
 			else
