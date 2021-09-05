@@ -1,0 +1,54 @@
+.TH QUERYT "1" "September 2021" "QUERYT 1.0" "User Commands"
+.SH NAME
+queryt \- API keyless YouTube querying tool.
+.SH SYNOPSIS
+.B queryt -s
+[\fI\,SEARCH\/\fR]... [\fI\,OPTIONS\/\fR]...
+.SH DESCRIPTION
+.PP
+Query various searches from YouTube to standard output.
+.TP
+\fB\-f\fR, \fB\-\-format\fR
+uses format modifiers to customize the output  \fB[aditRT]\fR
+.TP
+\fB\-m\fR, \fB\-\-max\fR
+defines the max number of displayed results\fR
+.TP
+\fB\-s\fR, \fB\-\-search\fR
+search content on youtube\fR
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+display this help and exit
+.TP
+\fB\-v\fR, \fB\-\-version\fR
+output version information and exit
+.SH FORMAT MODIFIERS
+.TP
+\fBa\fR
+author
+.TP
+\fBd\fR
+duration or video length
+.TP
+\fBi\fR
+video id
+.TP
+\fBt\fR
+title
+.TP
+\fBR\fR
+return
+.TP
+\fBT\fR
+tab
+.SH EXAMPLES
+.TP
+queryt -s "Never Gonna Give You Up" -m 5 -f iTaTdRt
+.TP
+Search for the video "Never Gonna Give You Up" sets the max results to 5 and formats it by showing the information by this order:
+.TP
+[video id] \fItab\fR [author] \fItab\fR [duration] \fIreturn\fR [title]
+.SH AUTHOR
+Written by Rafael Marçalo 2021.
+.SH LICENSE
+GPLv3

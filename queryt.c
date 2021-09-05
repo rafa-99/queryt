@@ -128,8 +128,8 @@ void processOptions(int *options, char **args, int argc)
 		if ( options[1] || (options[3] && options[4]) || argc == 1)
 		{
 			printf("Usage: queryt -s [SEARCH]... [OPTIONS]...\n"
-					"Make youtube querys without authentication or API Key\n\n"
-					"  -f, --format		format the output query with with custom modifiers\n"
+					"API Keyless YouTube querying tool.\n\n"
+					"  -f, --format		uses  format  modifiers  to  customize  the  output\n"
 					"		a 	author;\n"
 					"		d	duration;\n"
 					"		i	video id;\n"
