@@ -8,6 +8,7 @@
 #include "libs/json.h"
 
 #define VERSION "1.0"
+#define SEARCHLINK "https://www.youtube.com/results?search_query="
 
 void processOptions(int *options, char **args, int argc);
 
@@ -74,8 +75,8 @@ void processOptions(int *options, char **args, int argc)
 		char *query = queryNormalizer(args[2]);
 		if ( query != NULL )
 		{
-			char *link = (char *) calloc(strlen("https://www.youtube.com/results?search_query=") + strlen(query) + 1, sizeof(char));
-			strcpy(link, "https://www.youtube.com/results?search_query=");
+			char *link = (char *) calloc(strlen(SEARCHLINK) + strlen(query) + 1, sizeof(char));
+			strcpy(link, SEARCHLINK);
 			strcat(link, query);
 
 			char *json = extractQueryJSON(link);

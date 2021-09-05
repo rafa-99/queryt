@@ -11,7 +11,7 @@ FLAGS = -march=native -O3 -pipe -faggressive-loop-optimizations
 LIBS = -lcurl -ljson-c
 
 # Compiled Code
-CLEAN = queryt
+CLEAN = queryt queryt_debug
 
 # MakeOPTS
 build: clean
