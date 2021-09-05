@@ -3,6 +3,11 @@ API keyless YouTube querying tool in C
 
 This program makes a quick youtube query of a inputted query and uses the [libcurl](https://curl.se/libcurl/) libraries to download the full HTML page and scrape the query json form the HTML, then uses [json-c](https://github.com/json-c/json-c) libraries to search for videos array and displays this videos information according to user passed arguments.
 
+## Dependencies
+
+* [libcurl](https://curl.se/libcurl/) *(curl)*
+* [json-c](https://github.com/json-c/json-c) *(present on most linux distros)*
+
 ## How to use
 
 ### Install
