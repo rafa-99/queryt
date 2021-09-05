@@ -2,9 +2,8 @@
 
 typedef struct video
 {
-	char *title, *author, *id, *duration;
+  char *title, *author, *id, *duration;
 } Video;
 
-
-Video createVideo(char *title, char *author, char *id, char *duration);
-void freeVideo(Video *v);
+Video createVideo (char *title, char *author, char *id, char *duration);
+void freeVideo (Video *v);

@@ -1,86 +1,91 @@
+#include "utils.h"
+#include "../include/video.h"
+#include "../libs/curl.h"
+#include "../libs/string.h"
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
-#include "utils.h"
-#include "../libs/curl.h"
-#include "../libs/string.h"
-#include "../include/video.h"
 
-int tokenCount(char *string, char *delimiter)
+int
+tokenCount (char *string, char *delimiter)
 {
 	int totalCount = 0;
 
 	if (string != NULL && delimiter != NULL)
 	{
-		char *auxString = (char *)calloc(strlen(string) + 1, sizeof(char));
-		strcpy(auxString, string);
+		char *auxString = (char *)calloc (strlen (string) + 1, sizeof (char));
+		strcpy (auxString, string);
 
-		char *token = strtok(auxString, delimiter);
+		char *token = strtok (auxString, delimiter);
 
 		while (token != NULL)
 		{
 			totalCount++;
-			token = strtok(NULL, delimiter);
+			token = strtok (NULL, delimiter);
 		}
 
-		free(auxString);
+		free (auxString);
 	}
 
 	return totalCount;
 }
 
-char **tokenizer(char *string, char *delimiter)
+char **
+tokenizer (char *string, char *delimiter)
 {
 	char **tokens = NULL;
 
 	if (string != NULL && delimiter != NULL)
 	{
-		char *auxString = (char *)calloc(strlen(string) + 1, sizeof(char));
-		strcpy(auxString, string);
+		char *auxString = (char *)calloc (strlen (string) + 1, sizeof (char));
+		strcpy (auxString, string);
 
-		tokens = (char **)calloc(tokenCount(auxString, delimiter), sizeof(char *));
-		char *tempToken = strtok(auxString, delimiter);
+		tokens = (char **)calloc (tokenCount (auxString, delimiter),
+				sizeof (char *));
+		char *tempToken = strtok (auxString, delimiter);
 
 		for (int i = 0; tempToken != NULL; i++)
 		{
-			tokens[i] = (char *)calloc(strlen(tempToken) + 1, sizeof(char));
-			strcpy(tokens[i], tempToken);
-			tempToken = strtok(NULL, delimiter);
+			tokens[i] = (char *)calloc (strlen (tempToken) + 1, sizeof (char));
+			strcpy (tokens[i], tempToken);
+			tempToken = strtok (NULL, delimiter);
 		}
 
-		free(auxString);
+		free (auxString);
 	}
 	else
 	{
-		tokens = (char **)calloc(1, sizeof(char));
+		tokens = (char **)calloc (1, sizeof (char));
 	}
 
 	return tokens;
 }
 
-void freeTokens(char **tokens, int size)
+void
+freeTokens (char **tokens, int size)
 {
-	if ( size > 0 )
+	if (size > 0)
 	{
-		for ( int i = 0; i < size; i++ )
+		for (int i = 0; i < size; i++)
 		{
-			free(tokens[i]);
+			free (tokens[i]);
 		}
 	}
-	free(tokens);
+	free (tokens);
 }
 
-char *queryNormalizer(char *query)
+char *
+queryNormalizer (char *query)
 {
 	char *norm = NULL;
-	if (query != NULL && strlen(query) > 0)
+	if (query != NULL && strlen (query) > 0)
 	{
 		// Declaring Initial Query Size
-		int querySize = strlen(query);
+		int querySize = strlen (query);
 
 		// Calculating Normalized Query Size Allocation
-		for (int i = 0; i < strlen(query); i++)
+		for (int i = 0; i < strlen (query); i++)
 		{
 			if (query[i] == '+' || query[i] == '#' || query[i] == '&')
 			{
@@ -89,10 +94,10 @@ char *queryNormalizer(char *query)
 		}
 
 		// Allocating Memory
-		norm = (char *)calloc(querySize + 1, sizeof(char));
+		norm = (char *)calloc (querySize + 1, sizeof (char));
 
 		// Creating New Normalized Query
-		for (int i = 0, added = 0; i < strlen(query); i++)
+		for (int i = 0, added = 0; i < strlen (query); i++)
 		{
 			switch (query[i])
 			{
@@ -138,105 +143,115 @@ char *queryNormalizer(char *query)
 	return norm;
 }
 
-char* extractQueryJSON(char *youtubeurl)
+char *
+extractQueryJSON (char *youtubeurl)
 {
 	char *json = NULL;
 
-	if (youtubeurl != NULL && strlen(youtubeurl) > 0)
+	if (youtubeurl != NULL && strlen (youtubeurl) > 0)
 	{
-		char *htmlPage = downloadPage(youtubeurl);
-		if ( htmlPage != NULL && strlen(htmlPage) > 0 )
+		char *htmlPage = downloadPage (youtubeurl);
+		if (htmlPage != NULL && strlen (htmlPage) > 0)
 		{
 			// Setting Up Vars
-			char jsonVar[] = "ytInitialData", needlessHTML[] = ";</script><script", **tokens = tokenizer(htmlPage, " ");
-			int numberOfTokens = tokenCount(htmlPage, " ");
-			json = (char *)calloc(1, sizeof(char));
+			char jsonVar[] = "ytInitialData",
+			     needlessHTML[] = ";</script><script",
+			     **tokens = tokenizer (htmlPage, " ");
+			int numberOfTokens = tokenCount (htmlPage, " ");
+			json = (char *)calloc (1, sizeof (char));
 
 			// Extracting JSON String
-			for (int i = 0, j = 1; i < numberOfTokens && strstr(tokens[j-1], needlessHTML) == NULL; i++)
+			for (int i = 0, j = 1;
+					i < numberOfTokens
+					&& strstr (tokens[j - 1], needlessHTML) == NULL;
+					i++)
 			{
-				if ( strcmp(tokens[i], jsonVar) == 0 )
+				if (strcmp (tokens[i], jsonVar) == 0)
 				{
-					for ( j = i + 2; strstr(tokens[j-1], needlessHTML) == NULL; j++ )
+					for (j = i + 2; strstr (tokens[j - 1], needlessHTML) == NULL;
+							j++)
 					{
-						json = realloc(json, (strlen(json) + strlen(tokens[j]) + 2));
-						strcat(json, tokens[j]);
-						strcat(json, " ");
+						json = realloc (
+								json, (strlen (json) + strlen (tokens[j]) + 2));
+						strcat (json, tokens[j]);
+						strcat (json, " ");
 					}
 				}
 			}
 
-			json[strlen(json) - strlen(needlessHTML)] = '\0';
-			freeTokens(tokens, numberOfTokens);
+			json[strlen (json) - strlen (needlessHTML)] = '\0';
+			freeTokens (tokens, numberOfTokens);
 		}
-		free(htmlPage);
+		free (htmlPage);
 	}
 	return json;
 }
 
-int checkNumber(char *num)
+int
+checkNumber (char *num)
 {
 	int number = 0, charCheck = 1;
 
-	if( num != NULL && strlen(num) > 0 && strlen(num) < 3 )
+	if (num != NULL && strlen (num) > 0 && strlen (num) < 3)
 	{
-		for( int i = 0; i < strlen(num) && charCheck; i++ )
+		for (int i = 0; i < strlen (num) && charCheck; i++)
 		{
-			if( !isdigit(num[i]) )
+			if (!isdigit (num[i]))
 			{
 				charCheck--;
 			}
 		}
 
-		number = ( charCheck ) ? atoi(num) : 0;
+		number = (charCheck) ? atoi (num) : 0;
 	}
 
 	return number;
 }
 
-void printVideoInfo(char *format, Video *videos, int numberOfVideos)
+void
+printVideoInfo (char *format, Video *videos, int numberOfVideos)
 {
-	if ( format != NULL && strlen(format) > 0 )
+	if (format != NULL && strlen (format) > 0)
 	{
-		for ( int i = 0; i < numberOfVideos; i++ )
+		for (int i = 0; i < numberOfVideos; i++)
 		{
-			for ( int j = 0; j < strlen(format); j++ )
+			for (int j = 0; j < strlen (format); j++)
 			{
-				switch(format[j])
+				switch (format[j])
 				{
 					case 'a':
-						printf("%s", videos[i].author);
+						printf ("%s", videos[i].author);
 						break;
 					case 'd':
-						printf("%s", videos[i].duration);
+						printf ("%s", videos[i].duration);
 						break;
 					case 'i':
-						printf("%s", videos[i].id);
+						printf ("%s", videos[i].id);
 						break;
 					case 't':
-						printf("%s", videos[i].title);
+						printf ("%s", videos[i].title);
 						break;
 					case 'R':
-						printf("\n");
+						printf ("\n");
 						break;
 					case 'T':
-						printf("\t");
+						printf ("\t");
 						break;
 					default:
-						if( !isalpha(format[j]) )
+						if (!isalpha (format[j]))
 						{
-							printf("%c", format[j]);
+							printf ("%c", format[j]);
 						}
 				}
 			}
-			printf("\n");
+			printf ("\n");
 		}
 	}
 	else
 	{
-		for( int i = 0; i < numberOfVideos; i++ )
+		for (int i = 0; i < numberOfVideos; i++)
 		{
-			printf("%s\t%s\n", videos[i].id, videos[i].title);
+			printf ("%s\t%s\n", videos[i].id, videos[i].title);
 		}
 	}
 }

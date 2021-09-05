@@ -1,3 +1,3 @@
 #pragma once
 
-char* downloadPage(char *page);
+char *downloadPage (char *page);

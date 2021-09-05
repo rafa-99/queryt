@@ -2,9 +2,9 @@
 
 typedef struct string
 {
-	char *string;
-	int length;
+  char *string;
+  int length;
 } String;
 
-String newString(char *string);
-void freeString(String *s);
+String newString (char *string);
+void freeString (String *s);
