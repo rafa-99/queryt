@@ -2,8 +2,8 @@
 
 typedef struct string
 {
-  char *string;
-  int length;
+	char *string;
+	int length;
 } String;
 
 String newString (char *string);
