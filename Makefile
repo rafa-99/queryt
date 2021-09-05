@@ -5,7 +5,7 @@
 SRC = queryt.c src/utils.c src/video.c libs/curl.c libs/string.c libs/json.c
 
 # Compiler Flags
-FLAGS = -march=native -O3 -pipe -faggressive-loop-optimizations
+FLAGS = -march=native -flto -pipe -faggressive-loop-optimizations
 
 # Libraries
 LIBS = -lcurl -ljson-c
