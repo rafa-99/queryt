@@ -4,21 +4,21 @@
 # Source Code
 SRC = queryt.c src/utils.c src/video.c libs/curl.c libs/string.c libs/json.c
 
-# Compiler Flags
-FLAGS = -march=native -flto -pipe -faggressive-loop-optimizations
-
 # Libraries
 LIBS = -lcurl -ljson-c
+
+## Uncomment for OpenBSD
+# LIBS = -lcurl -ljson-c -I/usr/local/include -L/usr/local/lib
 
 # Compiled Code
 CLEAN = queryt queryt_debug
 
 # MakeOPTS
 build: clean
-	cc -o queryt ${FLAGS} ${SRC} ${LIBS}
+	cc -o queryt ${SRC} ${LIBS}
 
 debug: clean
-	cc -g -o queryt_debug ${FLAGS} ${SRC} ${LIBS}
+	cc -g -o queryt_debug ${SRC} ${LIBS}
 
 clean:
 	rm -rf ${CLEAN}
