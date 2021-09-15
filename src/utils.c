@@ -251,7 +251,7 @@ printVideoInfo (char *format, Video *videos, int numberOfVideos)
 	{
 		for (int i = 0; i < numberOfVideos; i++)
 		{
-			printf ("%s %s\n", videos[i].id, videos[i].title);
+			printf ("%s\t%s\n", videos[i].id, videos[i].title);
 		}
 	}
 }
