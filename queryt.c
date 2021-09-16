@@ -104,7 +104,7 @@ processOptions (int *options, char **args, int argc)
 							? checkNumber (args[1])
 							: videoCount;
 						char *format = (options[0]) ? args[0] : "";
-						printVideoInfo (format, videos, printedVideos);
+						printVideo (format, videos, printedVideos);
 
 						for (int i = 0; i < videoCount; i++)
 						{

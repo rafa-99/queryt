@@ -7,4 +7,3 @@ void freeTokens (char **tokens, int size);
 char *queryNormalizer (char *query);
 char *extractQueryJSON (char *youtubeurl);
 int checkNumber (char *num);
-void printVideoInfo (char *format, Video *videos, int numberOfVideos);
