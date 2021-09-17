@@ -3,77 +3,10 @@
 #include "../libs/curl.h"
 #include "../libs/string.h"
 #include <ctype.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-int
-tokenCount (char *string, char *delimiter)
-{
-	int totalCount = 0;
-
-	if (string != NULL && delimiter != NULL)
-	{
-		char *auxString = (char *)calloc (strlen (string) + 1, sizeof (char));
-		strcpy (auxString, string);
-
-		char *token = strtok (auxString, delimiter);
-
-		while (token != NULL)
-		{
-			totalCount++;
-			token = strtok (NULL, delimiter);
-		}
-
-		free (auxString);
-	}
-
-	return totalCount;
-}
-
-char **
-tokenizer (char *string, char *delimiter)
-{
-	char **tokens = NULL;
-
-	if (string != NULL && delimiter != NULL)
-	{
-		char *auxString = (char *)calloc (strlen (string) + 1, sizeof (char));
-		strcpy (auxString, string);
-
-		tokens = (char **)calloc (tokenCount (auxString, delimiter),
-				sizeof (char *));
-		char *tempToken = strtok (auxString, delimiter);
-
-		for (int i = 0; tempToken != NULL; i++)
-		{
-			tokens[i] = (char *)calloc (strlen (tempToken) + 1, sizeof (char));
-			strcpy (tokens[i], tempToken);
-			tempToken = strtok (NULL, delimiter);
-		}
-
-		free (auxString);
-	}
-	else
-	{
-		tokens = (char **)calloc (1, sizeof (char));
-	}
-
-	return tokens;
-}
-
-void
-freeTokens (char **tokens, int size)
-{
-	if (size > 0)
-	{
-		for (int i = 0; i < size; i++)
-		{
-			free (tokens[i]);
-		}
-	}
-	free (tokens);
-}
+#define JSONVAR "ytInitialData = "
 
 char *
 queryNormalizer (char *query)
@@ -153,34 +86,12 @@ extractQueryJSON (char *youtubeurl)
 		char *htmlPage = downloadPage (youtubeurl);
 		if (htmlPage != NULL && strlen (htmlPage) > 0)
 		{
-			// Setting Up Vars
-			char jsonVar[] = "ytInitialData",
-			     needlessHTML[] = ";</script><script",
-			     **tokens = tokenizer (htmlPage, " ");
-			int numberOfTokens = tokenCount (htmlPage, " ");
-			json = (char *)calloc (1, sizeof (char));
-
-			// Extracting JSON String
-			for (int i = 0, j = 1;
-					i < numberOfTokens
-					&& strstr (tokens[j - 1], needlessHTML) == NULL;
-					i++)
+			char *jsonVar = strstr (htmlPage, JSONVAR) + strlen (JSONVAR);
+			if (jsonVar != NULL && strlen (jsonVar) > 0)
 			{
-				if (strcmp (tokens[i], jsonVar) == 0)
-				{
-					for (j = i + 2; strstr (tokens[j - 1], needlessHTML) == NULL;
-							j++)
-					{
-						json = realloc (
-								json, (strlen (json) + strlen (tokens[j]) + 2));
-						strcat (json, tokens[j]);
-						strcat (json, " ");
-					}
-				}
+				json = (char *)calloc (strlen (jsonVar) + 1, sizeof (char));
+				strcpy (json, jsonVar);
 			}
-
-			json[strlen (json) - strlen (needlessHTML)] = '\0';
-			freeTokens (tokens, numberOfTokens);
 		}
 		free (htmlPage);
 	}
