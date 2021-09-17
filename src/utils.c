@@ -3,7 +3,6 @@
 #include "../libs/curl.h"
 #include "../libs/string.h"
 #include <ctype.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -87,11 +86,11 @@ extractQueryJSON (char *youtubeurl)
 		char *htmlPage = downloadPage (youtubeurl);
 		if (htmlPage != NULL && strlen (htmlPage) > 0)
 		{
-			char *jsonVar = strstr(htmlPage, JSONVAR) + strlen(JSONVAR);
-			if ( jsonVar != NULL && strlen(jsonVar) > 0 )
+			char *jsonVar = strstr (htmlPage, JSONVAR) + strlen (JSONVAR);
+			if (jsonVar != NULL && strlen (jsonVar) > 0)
 			{
-				json = (char *) calloc(strlen(jsonVar) + 1, sizeof(char));
-				strcpy(json, jsonVar);
+				json = (char *)calloc (strlen (jsonVar) + 1, sizeof (char));
+				strcpy (json, jsonVar);
 			}
 		}
 		free (htmlPage);

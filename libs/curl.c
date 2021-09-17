@@ -2,7 +2,6 @@
 #include "string.h"
 #include <curl/curl.h>
 #include <curl/easy.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
