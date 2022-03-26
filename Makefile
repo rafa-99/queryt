@@ -4,6 +4,9 @@
 # Source Code
 SRC = queryt.c src/utils.c src/video.c libs/curl.c libs/string.c libs/json.c
 
+# Compiler
+CC = cc
+
 # Libraries
 LIBS = -lcurl -ljson-c
 
@@ -15,10 +18,10 @@ CLEAN = queryt queryt_debug
 
 # MakeOPTS
 build: clean
-	cc -o queryt ${SRC} ${LIBS}
+	${CC} -o queryt ${SRC} ${LIBS}
 
 debug: clean
-	cc -g -o queryt_debug ${SRC} ${LIBS}
+	${CC} -g -o queryt_debug ${SRC} ${LIBS}
 
 clean:
 	rm -rf ${CLEAN}
